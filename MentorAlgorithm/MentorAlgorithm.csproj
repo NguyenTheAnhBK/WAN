@@ -67,6 +67,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Algorithm\Dijkstra.cs" />
+    <Compile Include="Algorithm\Edge.cs" />
     <Compile Include="Algorithm\Mentor.cs" />
     <Compile Include="Algorithm\Node.cs" />
     <Compile Include="App.xaml.cs">

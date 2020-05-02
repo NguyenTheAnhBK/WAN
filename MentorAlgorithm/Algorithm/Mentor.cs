@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace MentorAlgorithm.Algorithm
 {
+    //tổng lưu lượng vào ra tại một nút chính là trọng số của nút đó
     public class Mentor
     {
         public int NumberOfNode { get; private set; }
@@ -15,9 +16,11 @@ namespace MentorAlgorithm.Algorithm
         private double _maxCost = 0;
 
         public double[,] Costs { get; set; }
+        public Dictionary<Tuple<Node, Node>, int> Traffics { get; set; } = new Dictionary<Tuple<Node, Node>, int>(); //Lưu lượng giữa 2 nút bất kỳ
+        public Dictionary<Node, List<Node>> _clusters { get; set; } = new Dictionary<Node, List<Node>>(); // cluster là một cụm với node đầu tiên là backbone và các node truy cập
         public List<Node> Backbones { get; private set; } = new List<Node>();
         //public Dictionary<Node, Node> Access { get; private set; } = new Dictionary<Node, Node>();
-        public List<Node> Access { get; private set; } = new List<Node>();
+        public List<Node> Access { get; private set; } = new List<Node>(); //Access[chẵn] là backbone, Access[lẻ] là access
 
         public Mentor(int n, int capacity, int threshold, double radius)
         {
@@ -31,6 +34,7 @@ namespace MentorAlgorithm.Algorithm
         {
             source.Traffic += traffic;
             dest.Traffic += traffic;
+            Traffics.Add(Tuple.Create(source, dest), traffic);
         }
 
         //Generate random nodes
@@ -136,16 +140,42 @@ namespace MentorAlgorithm.Algorithm
         {
             double RM = Radius * _maxCost;
             backbone.Status = true;
+            _clusters.Add(backbone, new List<Node>());
             for (int j = 0; j < NumberOfNode; j++)
             {
                 if (!Nodes[j].Status && Distance(backbone, Nodes[j]) <= RM)
                 {
+                    _clusters[backbone].Add(Nodes[j]);
                     //Access.Add(Nodes[j], Backbones[i]);
                     Access.Add(backbone);
                     Access.Add(Nodes[j]);
                     Nodes[j].Status = true;
                 }
             }
+        }
+
+        //Chuyển lưu lượng giữa các nút backbones
+        public int Traffic2Backbones(Node b1, Node b2)
+        {
+            int traffic = 0;
+            List<Node> s = _clusters[b1];
+            s.Add(b1);
+            List<Node> d = _clusters[b2];
+            d.Add(b2);
+
+            for (int i = 0; i < s.Count; i++)
+                for(int j = 0; j < d.Count; j++)
+                    if (Traffics.ContainsKey(Tuple.Create(s[i], d[j])))
+                        traffic += Traffics[Tuple.Create(s[i], d[j])];
+            return traffic;
+        }
+
+        //Kết nối các nút backbone với nhau sử dụng cây Prim-Dijkstra
+        public void ConnectBackbone()
+        {
+            List<Edge> edges = new List<Edge>();
+            
+            Dijkstra dijkstra = new Dijkstra(edges, Backbones, Backbones.Count);
         }
     }
 }

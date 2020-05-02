@@ -82,6 +82,23 @@ namespace MentorAlgorithm
             }
 
             Plotter.DataContext = mentor;
+
+            //logger
+            Logger.Text = "Lưu lượng giữa các nút: \n";
+            foreach(var item in mentor.Traffics)
+                Logger.Text += "T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t";
+
+            Logger.Text += "\nTrọng số của các nút: \n";
+            for (int i = 0; i < mentor.NumberOfNode; i++)
+                Logger.Text += "W(" + i + ") = " + mentor.Nodes[i].Traffic + "\t";
+
+            Logger.Text += "\nLưu lượng thực tế đi qua nút backbones: \n";
+            for(int i = 0; i < mentor.Backbones.Count; i++)
+                for(int j = 0; j < mentor.Backbones.Count; j++)
+                    if(i != j)
+                        Logger.Text += "T(" + mentor.Backbones[i].Name + ", " + mentor.Backbones[j].Name + ") = "
+                            + mentor.Traffic2Backbones(mentor.Backbones[i], mentor.Backbones[j]) + "\t";
+
         }
 
         private void GridPlotter_Checked(object sender, RoutedEventArgs e)

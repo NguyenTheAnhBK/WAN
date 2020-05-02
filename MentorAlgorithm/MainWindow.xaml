@@ -183,7 +183,7 @@
                                 <oxy:LinearAxis Title="X" Position="Bottom"></oxy:LinearAxis>
                                 <oxy:LinearAxis Title="Y" Position="Left"></oxy:LinearAxis>
                             </oxy:Plot.Axes>
-                            <oxy:LineSeries ItemsSource="{Binding Access}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Black"/>
+                            <oxy:LineSeries CanTrackerInterpolatePoints="False" ItemsSource="{Binding Access}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Black"/>
                             <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Nodes" ItemsSource="{Binding Nodes}" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
                             <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Backbones" ItemsSource="{Binding Backbones}" MarkerFill="Red" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
 
@@ -193,7 +193,9 @@
 
                     </Grid>
                 </TabItem>
-                <TabItem Header="Console"></TabItem>
+                <TabItem Header="Console">
+                    <TextBlock Name="Logger"></TextBlock>
+                </TabItem>
             </TabControl>
         </Grid>
 
