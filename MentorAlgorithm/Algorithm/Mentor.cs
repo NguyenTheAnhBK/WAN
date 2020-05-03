@@ -17,7 +17,10 @@ namespace MentorAlgorithm.Algorithm
 
         public double[,] Costs { get; set; }
         public Dictionary<Tuple<Node, Node>, int> Traffics { get; set; } = new Dictionary<Tuple<Node, Node>, int>(); //Lưu lượng giữa 2 nút bất kỳ
+        public Dictionary<Tuple<Node, Node>, int> _trafficBackbones { get; set; } = new Dictionary<Tuple<Node, Node>, int>(); //Lưu lượng thực tế đi qua nút backbone
         public Dictionary<Node, List<Node>> _clusters { get; set; } = new Dictionary<Node, List<Node>>(); // cluster là một cụm với node đầu tiên là backbone và các node truy cập
+        public Dictionary<Node, Node> _backboneConnect { get; set; } = new Dictionary<Node, Node>(); //cây prim-dijkstra với các nút backbone
+        public List<Node> BackboneConnect { get; set; } //BackboneConnect for plotter
         public List<Node> Backbones { get; private set; } = new List<Node>();
         //public Dictionary<Node, Node> Access { get; private set; } = new Dictionary<Node, Node>();
         public List<Node> Access { get; private set; } = new List<Node>(); //Access[chẵn] là backbone, Access[lẻ] là access
@@ -170,12 +173,32 @@ namespace MentorAlgorithm.Algorithm
             return traffic;
         }
 
+        public Dictionary<Tuple<Node, Node>, int> RealTrafficBackbones()
+        {
+            for (int i = 0; i < Backbones.Count; i++)
+                for (int j = 0; j < Backbones.Count; j++)
+                    if (i != j)
+                    {
+                        int traffic = Traffic2Backbones(Backbones[i], Backbones[j]);
+                        if(traffic > 0)
+                            _trafficBackbones.Add(Tuple.Create(Backbones[i], Backbones[j]), traffic);
+                    }
+            return _trafficBackbones;
+        }
+
         //Kết nối các nút backbone với nhau sử dụng cây Prim-Dijkstra
         public void ConnectBackbone()
         {
-            List<Edge> edges = new List<Edge>();
-            
-            Dijkstra dijkstra = new Dijkstra(edges, Backbones, Backbones.Count);
+            Dijkstra dijkstra = new Dijkstra(_trafficBackbones, Backbones, Backbones.Count);
+            Dictionary<Node, Node> path = dijkstra.FindPath(Backbones[0]);
+            _backboneConnect = path;
+            BackboneConnect = new List<Node>();
+            foreach(var p in path)
+            {
+                BackboneConnect.Add(p.Key);
+                BackboneConnect.Add(p.Value);
+                BackboneConnect.Add(new Node(double.NaN, double.NaN, "Null"));
+            }
         }
     }
 }

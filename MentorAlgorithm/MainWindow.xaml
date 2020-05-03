@@ -7,7 +7,8 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:converters="clr-namespace:MentorAlgorithm.Converters"
         mc:Ignorable="d"
-         Background="#fafafa"
+        Background="#fafafa"
+        Icon="/favicon.ico"
         Title="WAN" Height="655" Width="580">
     <Window.Resources>
         <Style TargetType="GroupBox">
@@ -62,7 +63,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="10 0 10 8">
+        <Grid Grid.Row="0" Margin="8 0 8 5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="3*"/>
@@ -107,7 +108,7 @@
                             <TextBox Text="{Binding Radius}" Grid.Column="3" Grid.Row="1"></TextBox>
                         </Grid>
 
-                        <DataGrid ColumnWidth="*" Name="ListTraffics" Grid.Column="1" AutoGenerateColumns="False">
+                        <DataGrid Background="White" ColumnWidth="*" Name="ListTraffics" Grid.Column="1" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="From" Binding="{Binding From}" />
                                 <DataGridTextColumn Header="To" Binding="{Binding To}" />
@@ -184,6 +185,7 @@
                                 <oxy:LinearAxis Title="Y" Position="Left"></oxy:LinearAxis>
                             </oxy:Plot.Axes>
                             <oxy:LineSeries CanTrackerInterpolatePoints="False" ItemsSource="{Binding Access}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Black"/>
+                            <oxy:LineSeries CanTrackerInterpolatePoints="False" ItemsSource="{Binding BackboneConnect}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Red"/>
                             <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Nodes" ItemsSource="{Binding Nodes}" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
                             <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Backbones" ItemsSource="{Binding Backbones}" MarkerFill="Red" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
 
@@ -194,12 +196,15 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Console">
-                    <TextBlock Name="Logger"></TextBlock>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">
+                        <TextBlock TextWrapping="Wrap" FontFamily="Consolas" Padding="10" Name="Logger"></TextBlock>
+                    </ScrollViewer>
                 </TabItem>
             </TabControl>
         </Grid>
 
         <StatusBar Grid.Row="1">
+            <TextBlock Margin="8 0 0 0">Wide Area Network v1</TextBlock>
         </StatusBar>
     </Grid>
 </Window>

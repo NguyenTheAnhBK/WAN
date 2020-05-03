@@ -44,6 +44,8 @@ namespace MentorAlgorithm.Algorithm
         {
             //G[u, v] = G[v, u] = w;
             //Edges.Add(new Edge { Source = s, Destination = d, Cost = w });
+            Edges.Add(Tuple.Create(s, d), w);
+            Edges.Add(Tuple.Create(d, s), w);
         }
 
         public Dictionary<Node, Node> FindPath(Node s) // s là đỉnh gốc
