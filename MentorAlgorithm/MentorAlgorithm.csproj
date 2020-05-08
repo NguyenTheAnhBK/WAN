@@ -71,7 +71,7 @@
     <Compile Include="Algorithm\Edge.cs" />
     <Compile Include="Algorithm\Mentor.cs" />
     <Compile Include="Algorithm\Node.cs" />
-    <Compile Include="Algorithm\Prim-Dijkstra.cs" />
+    <Compile Include="Algorithm\PrimDijkstra.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

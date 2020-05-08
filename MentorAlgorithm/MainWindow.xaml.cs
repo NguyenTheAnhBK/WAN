@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace MentorAlgorithm
 {
@@ -76,8 +77,12 @@ namespace MentorAlgorithm
                 var textAnnotation = new TextAnnotation
                 {
                     Text = i.ToString(),
-                    TextPosition = new DataPoint(mentor.Nodes[i].X + 1, mentor.Nodes[i].Y + 1),
-                    StrokeThickness = 0
+                    TextPosition = new DataPoint(mentor.Nodes[i].X, mentor.Nodes[i].Y),
+                    StrokeThickness = 0,
+                    FontSize = 11,
+                    TextColor = Colors.White,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center
                 };
                 Plotter.Annotations.Add(textAnnotation);
             }
@@ -96,10 +101,10 @@ namespace MentorAlgorithm
             for (int i = 0; i < mentor.NumberOfNode; i++)
                 Logger.Inlines.Add("W(" + i + ") = " + mentor.Nodes[i].Traffic + "\t");
 
-            Logger.Inlines.Add("\nLưu lượng thực tế đi qua nút backbones: \n");
-            Dictionary<Tuple<Node, Node>, int> realTrafficBackbones = mentor.RealTrafficBackbones();
-            foreach(var item in realTrafficBackbones)
-                Logger.Inlines.Add("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
+            //Logger.Inlines.Add("\nLưu lượng thực tế đi qua nút backbones: \n");
+            //Dictionary<Tuple<Node, Node>, double> realTrafficBackbones = mentor.RealTrafficBackbones();
+            //foreach(var item in realTrafficBackbones)
+            //    Logger.Inlines.Add("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
 
         }
 

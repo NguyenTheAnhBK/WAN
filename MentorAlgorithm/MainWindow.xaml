@@ -184,11 +184,12 @@
                                 <oxy:LinearAxis Title="X" Position="Bottom"></oxy:LinearAxis>
                                 <oxy:LinearAxis Title="Y" Position="Left"></oxy:LinearAxis>
                             </oxy:Plot.Axes>
+                            
                             <oxy:LineSeries CanTrackerInterpolatePoints="False" ItemsSource="{Binding Access}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Black"/>
                             <oxy:LineSeries CanTrackerInterpolatePoints="False" ItemsSource="{Binding BackboneConnect}" DataFieldX="X" DataFieldY="Y" StrokeThickness="1" LineStyle="Solid" Color="Red"/>
-                            <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Nodes" ItemsSource="{Binding Nodes}" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
-                            <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Backbones" ItemsSource="{Binding Backbones}" MarkerFill="Red" MarkerSize="6" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
-
+                            <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Nodes" ItemsSource="{Binding Nodes}" MarkerSize="7" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
+                            <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Backbones" ItemsSource="{Binding Backbones}" MarkerFill="Red" MarkerSize="7" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
+                            <oxy:ScatterSeries TrackerFormatString="X={2}&#x0a;Y={4}&#x0a;Traffic={Traffic}" Title="Center" ItemsSource="{Binding CenterBackbone}" MarkerFill="Blue" MarkerSize="7" MarkerType="Circle" MarkerStrokeThickness="1" MarkerStroke="Black"/>
                             <!--<oxy:Plot.Annotations>
                         </oxy:Plot.Annotations>-->
                         </oxy:Plot>

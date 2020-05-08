@@ -1,0 +1,66 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "MentorConsole/1.0.0": {
+        "dependencies": {
+          "MentorAlgorithm": "1.0.0"
+        },
+        "runtime": {
+          "MentorConsole.dll": {}
+        }
+      },
+      "MentorAlgorithm/1.0.0": {
+        "dependencies": {
+          "OxyPlot.Wpf": "2.0.0.0",
+          "OxyPlot": "2.0.0.0"
+        },
+        "runtime": {
+          "MentorAlgorithm.exe": {}
+        }
+      },
+      "OxyPlot.Wpf.Reference/2.0.0.0": {
+        "runtime": {
+          "OxyPlot.Wpf.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "OxyPlot.Reference/2.0.0.0": {
+        "runtime": {
+          "OxyPlot.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MentorConsole/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MentorAlgorithm/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OxyPlot.Wpf.Reference/2.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OxyPlot.Reference/2.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

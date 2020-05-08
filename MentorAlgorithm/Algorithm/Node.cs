@@ -13,6 +13,7 @@ namespace MentorAlgorithm.Algorithm
             this.Name = name;
         }
 
+        
         public string Name { get; set; }
         public int Traffic { get; set; } = 0;
         public int Weight { get; set; } = 0;
