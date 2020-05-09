@@ -49,7 +49,7 @@ namespace Tests
             Assert.AreEqual(expected, path);
         }
 
-        List<Node> GetNodes()
+        public static List<Node> GetNodes()
         {
             List<Node> nodes = new List<Node>();
             nodes.Add(new Node(0, 0, "0"));
@@ -62,7 +62,7 @@ namespace Tests
             return nodes;
         }
 
-        Dictionary<Tuple<Node, Node>, double> GetEdges(List<Node> nodes)
+        public static Dictionary<Tuple<Node, Node>, double> GetEdges(List<Node> nodes)
         {
             Dictionary<Tuple<Node, Node>, double> edges = new Dictionary<Tuple<Node, Node>, double>();
             edges.Add(Tuple.Create(nodes[0], nodes[1]), 5);

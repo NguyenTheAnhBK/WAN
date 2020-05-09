@@ -13,7 +13,7 @@ namespace MentorAlgorithm.Algorithm
         public int Threshold { get; set; } //W
         public double Radius { get; set; }
         public double UMin { get; set; } = 0.75;
-        public double alpha { get; set; } = 0.3;
+        public double Alpha { get; set; } = 0.3;
 
         private double _maxCost = 0;
 
@@ -29,13 +29,17 @@ namespace MentorAlgorithm.Algorithm
         public Dictionary<Tuple<Node, Node>, double> d { get; set; } // ma trận khoảng cách decac giữa các nút backbone
         public Dictionary<Tuple<Node, Node>, double> D { get; set; } = new Dictionary<Tuple<Node, Node>, double>(); // ma trận khoảng cách trên cây giữa các nút backbone
         public List<Node> CenterBackbone { get; set; } = new List<Node>(); //Node backbone trung tâm (để dưới dạng list để hiển thị lên plotter)
+        public Dictionary<Node, Node> _addLinks { get; set; } = new Dictionary<Node, Node>(); //thêm liên kết trực tiếp
+        public List<Node> AddLinks { get; set; } = new List<Node>(); //thêm liên kết trực tiếp cho plotter
 
-        public Mentor(int n, int capacity, int threshold, double radius)
+        public Mentor(int n, int capacity, int threshold, double radius, double alpha, double umin)
         {
             NumberOfNode = n;
             Capacity = capacity;
             Threshold = threshold;
             Radius = radius;
+            Alpha = alpha;
+            UMin = umin;
         }
 
         public void SetTraffic(Node source, Node dest, int traffic)
@@ -240,8 +244,8 @@ namespace MentorAlgorithm.Algorithm
             Node centerBB = FindCenterBackbone();
             //Dijkstra dijkstra = new Dijkstra(d, Backbones, Backbones.Count);//
             RealTrafficBackbones();
-            Dijkstra dijkstra = new Dijkstra(_trafficBackbones, Backbones, Backbones.Count);//
-            Dictionary<Node, Node> path = dijkstra.FindPath(centerBB);
+            PrimDijkstra primDijkstra = new PrimDijkstra(_trafficBackbones, Backbones, Backbones.Count, Alpha);//
+            Dictionary<Node, Node> path = primDijkstra.FindPath(centerBB);
             Dictionary<Tuple<Node, Node>, int> edges = new Dictionary<Tuple<Node, Node>, int>(); //chuyển từ tree (path) sang edge
             foreach(var p in path)
             {
@@ -285,9 +289,10 @@ namespace MentorAlgorithm.Algorithm
                 }
             }
 
-            IncrementalShortestPath(d, D, Backbones, _trafficBackbones, nodeOnPath, Capacity, UMin, _backboneConnect);
+            IncrementalShortestPath(d, D, Backbones, _trafficBackbones, nodeOnPath, Capacity, UMin, _addLinks);
 
-            BackboneConnect = ConvertDisplayPlotter(_backboneConnect);
+            //BackboneConnect = ConvertDisplayPlotter(_backboneConnect);
+            AddLinks = ConvertDisplayPlotter(_addLinks);
         }
 
         List<Node> ConvertDisplayPlotter(Dictionary<Node, Node> connect)
@@ -455,7 +460,7 @@ namespace MentorAlgorithm.Algorithm
             return home;
         }
 
-        public static void IncrementalShortestPath(Dictionary<Tuple<Node, Node>, double> d, Dictionary<Tuple<Node, Node>, double> D, List<Node> backbones, Dictionary<Tuple<Node, Node>, double> traffics, Dictionary<Tuple<Node, Node>, List<Node>> nodeOnPath, double C, double uMin, Dictionary<Node, Node> backboneConnect = null)
+        public static void IncrementalShortestPath(Dictionary<Tuple<Node, Node>, double> d, Dictionary<Tuple<Node, Node>, double> D, List<Node> backbones, Dictionary<Tuple<Node, Node>, double> traffics, Dictionary<Tuple<Node, Node>, List<Node>> nodeOnPath, double C, double uMin, Dictionary<Node, Node> addLinks = null)
         {
             Dictionary<Tuple<Node, Node>, int> links = new Dictionary<Tuple<Node, Node>, int>();
             foreach (var traffic in traffics)
@@ -521,20 +526,23 @@ namespace MentorAlgorithm.Algorithm
                         max = maxL.Max(x => x.Value);
                     foreach (var sd in maxL)
                     {
-                        if (sd.Value > L && sd.Value < max)
+                        if (sd.Value > L && sd.Value <= max)
                         {
                             D[sd.Key] = sd.Value;
                             D[Tuple.Create(sd.Key.Item2, sd.Key.Item1)] = sd.Value;
                             D[link.Key] = d[link.Key];
-                            if(backboneConnect != null)
-                            {
-                                backboneConnect[link.Key.Item2] = link.Key.Item1;
-                                foreach (var node in nodeOnPath[link.Key])
-                                    if(backboneConnect.ContainsKey(node) && backboneConnect[node] == link.Key.Item1)
-                                        backboneConnect.Remove(node);
-                            }
+                            //if(backboneConnect != null)
+                            //{
+                            //    backboneConnect[link.Key.Item2] = link.Key.Item1;
+                            //    foreach (var node in nodeOnPath[link.Key])
+                            //        if(backboneConnect.ContainsKey(node) && backboneConnect[node] == link.Key.Item1)
+                            //            backboneConnect.Remove(node);
+                            //}
                         }
                     }
+                    //thêm liên kết trực tiếp
+                    if (addLinks != null)
+                        addLinks[link.Key.Item2] = link.Key.Item1;
                 }
                 links.Remove(link.Key);
             }
