@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="Converters\PercentageConverter.cs" />
     <Compile Include="Helpers\Evaluate.cs" />
+    <Compile Include="Helpers\TableParser.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

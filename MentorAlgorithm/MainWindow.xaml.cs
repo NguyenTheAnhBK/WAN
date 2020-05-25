@@ -1,10 +1,13 @@
 ﻿using MentorAlgorithm.Algorithm;
+using MentorAlgorithm.Helpers;
 using OxyPlot;
 using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace MentorAlgorithm
@@ -19,8 +22,10 @@ namespace MentorAlgorithm
         public int Threshold { get; set; } = 2;
         public int Capacity { get; set; } = 10;
         public double Radius { get; set; } = 0.3;
-        public double Alpha { get; set; } = 0.3;
-        public double Umin { get; set; } = 0.75;
+        public double Alpha { get; set; } = 0.5;
+        public double Umin { get; set; } = 0.7;
+
+        Mentor mentor;
 
         public MainWindow()
         {
@@ -31,15 +36,46 @@ namespace MentorAlgorithm
 
         private void BtnRun_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
+                btnContinue.IsEnabled = false;
+                
                 if (NumberOfNodes <= 0 || Threshold <= 0 || Capacity < 0 || Radius < 0)
                     return;
 
-                Mentor mentor = new Mentor(NumberOfNodes, Capacity, Threshold, Radius, Alpha, Umin);
+                mentor = new Mentor(NumberOfNodes, Capacity, Threshold, Radius, Alpha, Umin);
                 mentor.GenerateNodes();
                 mentor.GenerateCosts(0.4);
 
+                Execute();
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("Initialize not empty!!!", "Warning");
+            //}
+        }
+
+        private void BtnContinue_Click(object sender, RoutedEventArgs e)
+        {
+            if (NumberOfNodes <= 0 || Threshold <= 0 || Capacity < 0 || Radius < 0)
+                return;
+
+            var nodes = mentor.Nodes.Select(node => new Node(node.X, node.Y, node.Name));
+            //var costs = mentor.Costs;
+            //var maxCost = mentor._maxCost;
+            mentor = new Mentor(NumberOfNodes, Capacity, Threshold, Radius, Alpha, Umin);
+            //mentor.GenerateNodes();
+            mentor.Nodes = nodes.ToList();
+            //mentor.Costs = costs;
+            //mentor._maxCost = maxCost;
+            mentor.GenerateCosts(0.4);
+            Execute();
+        }
+
+        private void Execute()
+        {
+            try
+            {
                 var listTraffics = ListTraffics.ItemsSource as List<Traffic>;
                 for (int i = 0; i < listTraffics.Count; i++)
                 {
@@ -96,23 +132,49 @@ namespace MentorAlgorithm
                 Plotter.DataContext = mentor;
 
                 //logger
-                Logger.Inlines.Add("Lưu lượng giữa các nút: \n");
+
+                if (overwriteConsole.IsChecked == true)
+                    Logger.Inlines.Clear();
+
+                LogLine("1. ");
+                LogLine("Lưu lượng giữa các nút:");
                 foreach (var item in mentor.Traffics)
-                    Logger.Inlines.Add("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
+                    Log("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
 
-                Logger.Inlines.Add("\nTrọng số của các nút: \n");
+                LogLine("Trọng số của các nút:");
                 for (int i = 0; i < mentor.NumberOfNode; i++)
-                    Logger.Inlines.Add("W(" + i + ") = " + mentor.Nodes[i].Traffic + "\t");
+                    Log("W(" + i + ") = " + mentor.Nodes[i].Traffic + "\t");
 
-                //Logger.Inlines.Add("\nLưu lượng thực tế đi qua nút backbones: \n");
-                //Dictionary<Tuple<Node, Node>, double> realTrafficBackbones = mentor.RealTrafficBackbones();
-                //foreach(var item in realTrafficBackbones)
-                //    Logger.Inlines.Add("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
+                LogLine("Lưu lượng thực tế đi qua các nút backbones:");
+                //foreach (var item in mentor._trafficBackbones)
+                //    Log("T(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
+                Log(mentor._trafficBackbones.ToStringTable("Node", mentor.Backbones, node => node.Name));
+
+                LogLine("2. ");
+                LogLine("Số đường sử dụng trên từng liên kết và độ sử dụng trên liên kết đó: link(node i, node j) = (n, u)");
+                //foreach (var item in mentor.LinksResult)
+                //    Log("Link(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = (" + item.Value.Item1 + ", " + item.Value.Item2.ToString() + ")\t");
+                LogLine(mentor.LinksResult.ToDictionary(k => k.Key, v => v.Value.Item1).ToStringTable("Node", mentor.Backbones, node => node.Name));
+                LogLine(mentor.LinksResult.ToDictionary(k => k.Key, v => v.Value.Item2).ToStringTable("Node", mentor.Backbones, node => node.Name));
+
+                LogLine("Giá thay đổi trên liên kết trực tiếp sau khi dùng Mentor 2: ");
+                //foreach (var item in mentor.D)
+                //    Log("( " + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = " + item.Value + "\t");
+                //var columnHeaders = new List<string> { "Node" };
+                //columnHeaders.AddRange(mentor.Backbones.Select(x => x.Name));
+                //Log(mentor.D.ToStringTable(columnHeaders.ToArray(), node => node.Value));
+                LogLine("Trước khi thêm liên kết trực tiếp: ");
+                LogLine(mentor.OldD);
+                LogLine("Sau khi thêm liên kết trực tiếp: ");
+                LogLine(mentor.D.ToStringTable("Node", mentor.Backbones, node => node.Name));
+
+                btnContinue.IsEnabled = true;
             }
             catch
             {
                 MessageBox.Show("Initialize not empty!!!", "Warning");
             }
+
         }
 
         private void GridPlotter_Checked(object sender, RoutedEventArgs e)
@@ -141,6 +203,15 @@ namespace MentorAlgorithm
         private void OverwriteConsole_Checked(object sender, RoutedEventArgs e)
         {
             appendConsole.IsChecked = false;
+        }
+
+        public void Log(string text)
+        {
+            Logger.Inlines.Add(text);
+        }
+        public void LogLine(string text)
+        {
+            Logger.Inlines.Add("\n" + text + "\n");
         }
     }
 

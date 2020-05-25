@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MentorAlgorithm.Helpers
 {
-    public class Helper
+    public static class Helper
     {
         public static int Evaluate(string expression)
         {
