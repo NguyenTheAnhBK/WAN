@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorAlgorithm", "MentorAl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MentorConsole", "MentorConsole\MentorConsole.csproj", "{66855E95-6365-4385-B853-A73841522B24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{29E66729-B99C-48CC-B9A6-7E077D0C37FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{29E66729-B99C-48CC-B9A6-7E077D0C37FB}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{CF67A25F-EC52-4BFC-9513-DF7577994BA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,8 @@ Global
 		{29E66729-B99C-48CC-B9A6-7E077D0C37FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29E66729-B99C-48CC-B9A6-7E077D0C37FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29E66729-B99C-48CC-B9A6-7E077D0C37FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF67A25F-EC52-4BFC-9513-DF7577994BA4}.Debug|Any CPU.ActiveCfg = Debug
+		{CF67A25F-EC52-4BFC-9513-DF7577994BA4}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

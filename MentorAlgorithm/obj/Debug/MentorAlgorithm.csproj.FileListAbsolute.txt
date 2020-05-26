@@ -16,6 +16,4 @@ C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL
 C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\bin\Debug\OxyPlot.Wpf.dll
 C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\bin\Debug\OxyPlot.xml
 C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\bin\Debug\OxyPlot.Wpf.xml
-C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\obj\Debug\MentorAlgorithm.csprojAssemblyReference.cache
 C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\obj\Debug\MentorAlgorithm.csproj.CopyComplete
-C:\Users\ADMIN\OneDrive - Hanoi University of Science and Technology\TCQHMVT\BTL\Code\WAN\MentorAlgorithm\obj\Debug\GeneratedInternalTypeHelper.g.cs
