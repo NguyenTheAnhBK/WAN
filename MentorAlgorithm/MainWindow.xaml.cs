@@ -128,6 +128,18 @@ namespace MentorAlgorithm
 
                 //Chuyển lưu lượng giữa các nút backbone và dựng cây prim-dijkstra giữa các nút backbone
                 mentor.ConnectBackbone();
+                
+                //Liên kết trên cây sau khi áp dụng mentor 2
+                var temp = mentor.LinksResult.ToDictionary(k => k.Key, v => v.Value.Item1);
+                foreach (var item in temp)
+                {
+                    if (item.Value > 0)
+                    {
+                        mentor.TreeLinks.Add(item.Key.Item1);
+                        mentor.TreeLinks.Add(item.Key.Item2);
+                        mentor.TreeLinks.Add(new Node(double.NaN, double.NaN, "Null"));
+                    }
+                }
 
                 Plotter.DataContext = mentor;
 
@@ -154,8 +166,10 @@ namespace MentorAlgorithm
                 LogLine("Số đường sử dụng trên từng liên kết và độ sử dụng trên liên kết đó: link(node i, node j) = (n, u)");
                 //foreach (var item in mentor.LinksResult)
                 //    Log("Link(" + item.Key.Item1.Name + ", " + item.Key.Item2.Name + ") = (" + item.Value.Item1 + ", " + item.Value.Item2.ToString() + ")\t");
-                LogLine(mentor.LinksResult.ToDictionary(k => k.Key, v => v.Value.Item1).ToStringTable("Node", mentor.Backbones, node => node.Name));
+                LogLine(temp.ToStringTable("Node", mentor.Backbones, node => node.Name));
                 LogLine(mentor.LinksResult.ToDictionary(k => k.Key, v => v.Value.Item2).ToStringTable("Node", mentor.Backbones, node => node.Name));
+                
+
 
                 LogLine("Giá thay đổi trên liên kết trực tiếp sau khi dùng Mentor 2: ");
                 //foreach (var item in mentor.D)

@@ -34,6 +34,7 @@ namespace MentorAlgorithm.Algorithm
         public Dictionary<Node, Node> _addLinks { get; set; } = new Dictionary<Node, Node>(); //thêm liên kết trực tiếp
         public List<Node> AddLinks { get; set; } = new List<Node>(); //thêm liên kết trực tiếp cho plotter
         public Dictionary<Tuple<Node, Node>, Tuple<double, double>> LinksResult = new Dictionary<Tuple<Node, Node>, Tuple<double, double>>(); //số đường sử dụng và độ sử dụng của từng liên kết
+        public List<Node> TreeLinks { get; set; } = new List<Node>();
 
         public Mentor(int n, int capacity, int threshold, double radius, double alpha, double umin)
         {
