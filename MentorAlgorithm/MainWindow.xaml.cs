@@ -177,10 +177,16 @@ namespace MentorAlgorithm
                 //var columnHeaders = new List<string> { "Node" };
                 //columnHeaders.AddRange(mentor.Backbones.Select(x => x.Name));
                 //Log(mentor.D.ToStringTable(columnHeaders.ToArray(), node => node.Value));
+                //LogLine("Trước khi thêm liên kết trực tiếp: ");
+                //LogLine(mentor.OldD);
+                //LogLine("Sau khi thêm liên kết trực tiếp: ");
+                //LogLine(mentor.D.ToStringTable("Node", mentor.Backbones, node => node.Name));
+
+                //LogLine("   *Giá: ");
                 LogLine("Trước khi thêm liên kết trực tiếp: ");
-                LogLine(mentor.OldD);
+                LogLine(mentor.d.ToStringTable("Node", mentor.Backbones, node => node.Name));
                 LogLine("Sau khi thêm liên kết trực tiếp: ");
-                LogLine(mentor.D.ToStringTable("Node", mentor.Backbones, node => node.Name));
+                LogLine(mentor.newCost.ToStringTable("Node", mentor.Backbones, node => node.Name));
 
                 btnContinue.IsEnabled = true;
             }

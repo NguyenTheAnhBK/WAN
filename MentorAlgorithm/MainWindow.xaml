@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Background="#fafafa"
         Icon="/favicon.ico"
-        Title="WAN" Height="655" Width="580">
+        Title="WAN" Height="655" Width="600">
     <Window.Resources>
         <Style TargetType="GroupBox">
             <Setter Property="Template">

@@ -15,6 +15,7 @@ namespace MentorAlgorithm.Algorithm
         public double Radius { get; set; }
         public double UMin { get; set; } = 0.7;
         public double Alpha { get; set; } = 0.5;
+        private double _alphaOfCost = 0.4;
 
         public double _maxCost = 0;
 
@@ -28,6 +29,7 @@ namespace MentorAlgorithm.Algorithm
         //public Dictionary<Node, Node> Access { get; private set; } = new Dictionary<Node, Node>();
         public List<Node> Access { get; private set; } = new List<Node>(); //Access[chẵn] là backbone, Access[lẻ] là access
         public Dictionary<Tuple<Node, Node>, double> d { get; set; } // ma trận khoảng cách decac giữa các nút backbone
+        public Dictionary<Tuple<Node, Node>, double> newCost { get; set; } // giá liên kết sau khi thêm liên kết trực tiếp
         public string OldD { get; set; } // ma trận khoảng cách trên cây giữa các nút backbone trước khi sử dụng liên kết trực tiếp Mentor 2
         public Dictionary<Tuple<Node, Node>, double> D { get; set; } //= new Dictionary<Tuple<Node, Node>, double>(); // ma trận khoảng cách trên cây giữa các nút backbone
         public List<Node> CenterBackbone { get; set; } //= new List<Node>(); //Node backbone trung tâm (để dưới dạng list để hiển thị lên plotter)
@@ -73,6 +75,7 @@ namespace MentorAlgorithm.Algorithm
         //Generate Cost by Multiple Decac
         public void GenerateCosts(double alpha)
         {
+            _alphaOfCost = alpha;
             //O(n^2)
             Costs = new double[NumberOfNode, NumberOfNode];
             for (int i = 0; i < NumberOfNode - 1; i++)
@@ -97,7 +100,7 @@ namespace MentorAlgorithm.Algorithm
         {
             //Xác định nút backbone trong mạng
             for (int i = 0; i < NumberOfNode; i++)
-                if (Nodes[i].Traffic / Capacity > Threshold)
+                if ((double)Nodes[i].Traffic / Capacity > Threshold)
                     Backbones.Add(Nodes[i]);
 
             _clusters = new Dictionary<Node, List<Node>>();
@@ -214,17 +217,27 @@ namespace MentorAlgorithm.Algorithm
         private void CalDistance()
         {
             d = new Dictionary<Tuple<Node, Node>, double>(Backbones.Count * Backbones.Count);
+            newCost = new Dictionary<Tuple<Node, Node>, double>(Backbones.Count * Backbones.Count);
             for(int i = 0; i < Backbones.Count; i++)
             {
                 if (!d.Keys.Contains(Tuple.Create(Backbones[i], Backbones[i])))
+                {
                     d.Add(Tuple.Create(Backbones[i], Backbones[i]), 0);
+                    newCost.Add(Tuple.Create(Backbones[i], Backbones[i]), 0);
+                }
                 for(int j = i + 1; j < Backbones.Count; j++)
                 {
                     double dis = Distance(Backbones[i], Backbones[j]);
                     if(!d.Keys.Contains(Tuple.Create(Backbones[i], Backbones[j])))
+                    {
                         d.Add(Tuple.Create(Backbones[i], Backbones[j]), dis);
+                        newCost.Add(Tuple.Create(Backbones[i], Backbones[j]), dis); //
+                    }
                     if (!d.Keys.Contains(Tuple.Create(Backbones[j], Backbones[i])))
+                    {
                         d.Add(Tuple.Create(Backbones[j], Backbones[i]), dis);
+                        newCost.Add(Tuple.Create(Backbones[j], Backbones[i]), dis); //
+                    }
                 }
             }
         }
@@ -312,7 +325,7 @@ namespace MentorAlgorithm.Algorithm
 
             OldD = D.ToStringTable("Node", Backbones, node => node.Name);
 
-            IncrementalShortestPath(d, D, Backbones, _trafficBackbones, nodeOnPath, Capacity, UMin, _addLinks, LinksResult);
+            IncrementalShortestPath(d, D, Backbones, _trafficBackbones, nodeOnPath, Capacity, UMin, _addLinks, LinksResult, newCost);
 
             //BackboneConnect = ConvertDisplayPlotter(_backboneConnect);
             AddLinks = ConvertDisplayPlotter(_addLinks);
@@ -483,7 +496,7 @@ namespace MentorAlgorithm.Algorithm
             return home;
         }
 
-        public static void IncrementalShortestPath(Dictionary<Tuple<Node, Node>, double> d, Dictionary<Tuple<Node, Node>, double> D, List<Node> backbones, Dictionary<Tuple<Node, Node>, double> traffics, Dictionary<Tuple<Node, Node>, List<Node>> nodeOnPath, double C, double uMin, Dictionary<Node, Node> addLinks = null, Dictionary<Tuple<Node, Node>, Tuple<double, double>> linksResult = null)
+        public static void IncrementalShortestPath(Dictionary<Tuple<Node, Node>, double> d, Dictionary<Tuple<Node, Node>, double> D, List<Node> backbones, Dictionary<Tuple<Node, Node>, double> traffics, Dictionary<Tuple<Node, Node>, List<Node>> nodeOnPath, double C, double uMin, Dictionary<Node, Node> addLinks = null, Dictionary<Tuple<Node, Node>, Tuple<double, double>> linksResult = null, Dictionary<Tuple<Node, Node>, double> newCost = null)
         {
             Dictionary<Tuple<Node, Node>, int> links = new Dictionary<Tuple<Node, Node>, int>(); //Liên kết n hops
             foreach (var traffic in traffics)
@@ -533,7 +546,7 @@ namespace MentorAlgorithm.Algorithm
                     List<Node> sList = new List<Node>();
                     List<Node> dList = new List<Node>();
                     List<Node> consider = backbones.Except(nodeOnPath[link.Key]).ToList();
-                    double L = d[link.Key];
+                    double L = d[link.Key]; //Khoảng cách decac
                     foreach (var node in consider)
                     {
                         double dNodeToS = D[Tuple.Create(node, link.Key.Item1)];
@@ -555,14 +568,23 @@ namespace MentorAlgorithm.Algorithm
                     }
                     double max = 0;
                     if (maxL.Count > 0)
-                        max = maxL.Max(x => x.Value);
+                        max = maxL.Where(l => l.Key != link.Key).Max(x => x.Value);
+
+                    int newd = (int)max + 1;
                     foreach (var sd in maxL)
                     {
-                        if (sd.Value > L && sd.Value <= max)
+                        if (sd.Value > L)
                         {
-                            D[sd.Key] = sd.Value;
-                            D[Tuple.Create(sd.Key.Item2, sd.Key.Item1)] = sd.Value;
+                            //D[sd.Key] = sd.Value;
+                            //D[Tuple.Create(sd.Key.Item2, sd.Key.Item1)] = sd.Value;
+                            //D[link.Key] = d[link.Key];
+
+                            D[sd.Key] = newd;
+                            D[Tuple.Create(sd.Key.Item2, sd.Key.Item1)] = newd;
                             D[link.Key] = d[link.Key];
+
+                            if (newd > d[sd.Key])
+                                newCost[sd.Key] = newd;
                             //if(backboneConnect != null)
                             //{
                             //    backboneConnect[link.Key.Item2] = link.Key.Item1;
